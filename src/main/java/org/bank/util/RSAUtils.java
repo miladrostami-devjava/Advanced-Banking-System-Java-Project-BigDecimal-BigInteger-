@@ -61,7 +61,7 @@ public class RSAUtils {
 
 
     public KeyPair getKeyPair(){
-        if (keyPair != null){
+        if (keyPair == null){
             throw new IllegalArgumentException("No key pair generated yet ,Call generateKeys() first.");
         }
         return keyPair;

@@ -30,7 +30,7 @@ public class MainApp {
         CurrencyConverter converter = new CurrencyConverter(context);
         PersistenceService persistenceService = new PersistenceService(new File("bank_data.json"));
         RSAUtils rsa = new RSAUtils();
-        RSAUtils.generateKeys(512);
+
         LoanCalculator loanCalculator = new LoanCalculator(context);
         BankingService service = new BankingService(context, converter, loanCalculator, transferFeePercent, persistenceService, rsa);
         Scanner scanner = new Scanner(System.in);
@@ -120,7 +120,10 @@ public class MainApp {
                         break;
                     }
                     help.print("Show Accounts:");
-                    service.listAccounts();
+                    for (Account acc : service.listAccounts()){
+                        System.out.println(acc);
+                    }
+                  //  service.listAccounts();
                     break;
                 case 6:// Currency Conversion
                     if (account == null) {
@@ -130,6 +133,7 @@ public class MainApp {
                     //     public BigDecimal convert(BigDecimal amount,Currency from,Currency to){
                     help.print("Enter  Amount To Currency Conversion:");
                     BigDecimal amountForCurrency = scanner.nextBigDecimal();
+                    scanner.nextLine();
                     help.print("Enter your From currency(USD,EUR,IRR,JPY):");
                     String fromCurrencyInput = scanner.nextLine().toUpperCase();
                     Currency fromCurrency = Currency.valueOf(fromCurrencyInput);
@@ -148,10 +152,13 @@ public class MainApp {
                     }
                     help.print("Principal:");
                     BigDecimal principal = scanner.nextBigDecimal();
+
                     help.print("Annual Rate (e.g. .012):");
                     BigDecimal annualRate = scanner.nextBigDecimal();
+                    scanner.nextLine();
                     help.print("Enter Months:");
                     int months = scanner.nextInt();
+                    scanner.nextLine();
                     help.print("Enter start Date (YYYY-MM-DD): ");
                     String dateInput = scanner.nextLine();
                     LocalDate startDate = LocalDate.parse(dateInput);
@@ -168,7 +175,11 @@ public class MainApp {
                     help.print("Enter number to encrypt:");
                     BigInteger msg = scanner.nextBigInteger();
                     scanner.nextLine();
-                    RSAUtils.KeyPair keyPair = rsa.getKeyPair();
+              //      if (rsa.getKeyPair() == null){
+                    RSAUtils.KeyPair keyPair =    RSAUtils.generateKeys(1024);
+                //    }
+
+                   // RSAUtils.KeyPair keyPair = rsa.getKeyPair();
                     BigInteger encrypted = rsa.encrypt(msg, keyPair.pubExp, keyPair.modules);
                     help.print("Encrypted :" + " " + encrypted);
                     break;
